@@ -1,4 +1,4 @@
-name: Import and publish Alexey After Shift
+name: Publish Alexey After Shift Game
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -15,42 +15,41 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  import-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Check out repository
+      - name: Check out source
         uses: actions/checkout@v4
 
-      - name: Import complete original game project
-        env:
-          GAME_ARCHIVE_URL: https://d2ol7oe51mr4n9.cloudfront.net/user_38VvyOCqf7C1HmHE638V4pkuRY3/f8781c9f-aa96-4cee-870a-3288bcc73a65.zip
-        run: |
-          set -euo pipefail
-          curl --fail --show-error --location --retry 3 "$GAME_ARCHIVE_URL" -o /tmp/alexey.zip
-          mkdir -p /tmp/alexey-import
-          unzip -q /tmp/alexey.zip -d /tmp/alexey-import
-          test -s /tmp/alexey-import/alexey/dist/index.html
-          # Keep the workflow owned by this repository; do not import GitHub workflows.
-          rm -rf /tmp/alexey-import/alexey/.github
-          cp -a /tmp/alexey-import/alexey/. .
-          test -s dist/index.html
-          git add -A
-          if ! git diff --cached --quiet; then
-            git -c user.name='DFS Arcade' -c user.email='actions@users.noreply.github.com' commit -m 'Import complete Alexey After Shift browser game [skip ci]'
-            git push origin HEAD:main
-          fi
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
 
-      - name: Configure GitHub Pages
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build game
+        run: npm run build
+
+      - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
-      - name: Upload game files
+      - name: Upload production files
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
-      - name: Deploy live game
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
