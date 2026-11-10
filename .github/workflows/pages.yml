@@ -33,11 +33,13 @@ jobs:
           mkdir -p /tmp/alexey-import
           unzip -q /tmp/alexey.zip -d /tmp/alexey-import
           test -s /tmp/alexey-import/alexey/dist/index.html
+          # Keep the workflow owned by this repository; do not import GitHub workflows.
+          rm -rf /tmp/alexey-import/alexey/.github
           cp -a /tmp/alexey-import/alexey/. .
           test -s dist/index.html
           git add -A
           if ! git diff --cached --quiet; then
-            git -c user.name='DFS Arcade' -c user.email='actions@users.noreply.github.com' commit -m 'Import complete Alexey After Shift browser game'
+            git -c user.name='DFS Arcade' -c user.email='actions@users.noreply.github.com' commit -m 'Import complete Alexey After Shift browser game [skip ci]'
             git push origin HEAD:main
           fi
 
