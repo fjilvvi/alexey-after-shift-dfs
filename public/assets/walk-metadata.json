@@ -1,0 +1,72 @@
+{
+  "width": 328,
+  "height": 740,
+  "baseline": 737,
+  "frames": 8,
+  "diagnostics": [
+    {
+      "frame": 0,
+      "leftAngle": 2.5,
+      "rightAngle": 2.5,
+      "leftBottom": 733,
+      "rightBottom": 739,
+      "groundOffset": -2
+    },
+    {
+      "frame": 1,
+      "leftAngle": 10.960155108391486,
+      "rightAngle": -7.424621202458749,
+      "leftBottom": 721,
+      "rightBottom": 730,
+      "groundOffset": 7
+    },
+    {
+      "frame": 2,
+      "leftAngle": 13,
+      "rightAngle": -13,
+      "leftBottom": 716,
+      "rightBottom": 721,
+      "groundOffset": 16
+    },
+    {
+      "frame": 3,
+      "leftAngle": 7.42462120245875,
+      "rightAngle": -10.960155108391488,
+      "leftBottom": 725,
+      "rightBottom": 723,
+      "groundOffset": 12
+    },
+    {
+      "frame": 4,
+      "leftAngle": -2.4999999999999982,
+      "rightAngle": -2.5000000000000018,
+      "leftBottom": 739,
+      "rightBottom": 734,
+      "groundOffset": -2
+    },
+    {
+      "frame": 5,
+      "leftAngle": -10.960155108391486,
+      "rightAngle": 7.424621202458749,
+      "leftBottom": 739,
+      "rightBottom": 739,
+      "groundOffset": -2
+    },
+    {
+      "frame": 6,
+      "leftAngle": -13,
+      "rightAngle": 13,
+      "leftBottom": 739,
+      "rightBottom": 739,
+      "groundOffset": -2
+    },
+    {
+      "frame": 7,
+      "leftAngle": -7.42462120245875,
+      "rightAngle": 10.960155108391488,
+      "leftBottom": 739,
+      "rightBottom": 739,
+      "groundOffset": -2
+    }
+  ]
+}

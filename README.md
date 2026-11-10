@@ -26,7 +26,7 @@
 Нужен Node.js 22 и npm.
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
@@ -57,7 +57,18 @@ GAME_URL=http://127.0.0.1:5173 CHROMIUM_PATH=/path/to/chromium npm test
 
 При необходимости установите браузер Playwright командой `npx playwright install chromium`, затем передайте в `CHROMIUM_PATH` путь, который возвращает `chromium.executablePath()` из пакета `@playwright/test`.
 
-Сценарий проходит магазин, проверяет восстановление после ошибочного товара и промаха, десять повторений, финал, повторную игру, паузу, мобильные касания, звук и отсутствие горизонтального переполнения. Скриншоты и машиночитаемый отчёт сохраняются в `artifacts/`. Наличие сценария само по себе не подтверждает успешную проверку: актуальный результат нужно смотреть в `artifacts/qa-report.json` после запуска. Эмуляция сенсорного экрана Chromium не заменяет проверку на физическом iPhone в Safari.
+Сценарий проходит магазин, проверяет восстановление после ошибочного товара и промаха, десять повторений, финал, повторную игру, паузу, мобильные касания, звук и отсутствие горизонтального переполнения. В браузере также измеряются периоды индикатора для повторений 1–3, 4–6, 7–9 и 10, а задержки восстановления после успеха и промаха сверяются с 800 и 600 мс.
+
+Дополнительные проверки:
+
+```bash
+node tests/mobile.mjs       # удержание сенсорных кнопок, пауза, звук, portrait layout
+node tests/visual-qa.mjs    # реальные кадры ходьбы, опорные точки, тени, диалоги и зал
+```
+
+Скриншоты и машиночитаемые отчёты сохраняются в `artifacts/`, `artifacts/mobile/` и `artifacts/visual/`. Наличие сценариев само по себе не подтверждает успешную проверку: актуальные результаты нужно смотреть в JSON-отчётах после запуска. Эмуляция сенсорного экрана Chromium не заменяет проверку на физическом iPhone в Safari.
+
+Для холодной проверки production-сборки запустите `npm run preview -- --port 4173`, затем передайте `GAME_URL=http://127.0.0.1:4173` тем же трём командам.
 
 ## Структура
 
@@ -67,28 +78,29 @@ src/customer.ts      Оригинальные программные пиксе�
 src/audio.ts         Ретро-музыка и эффекты Web Audio
 src/style.css        Адаптивная страница и оболочка игры
 public/assets/       Локальные фоны, спрайты, шрифт и лицензия шрифта
-scripts/assets.mjs   Подготовка игровых ассетов
-tests/playthrough.mjs  Сквозная проверка в Chromium
+scripts/assets.mjs      Подготовка исходных игровых ассетов
+scripts/walk-frames.mjs Воспроизводимая генерация атласа ходьбы и его метаданных
+tests/playthrough.mjs   Сквозная проверка в Chromium
+tests/mobile.mjs        Сенсорное управление и мобильная раскладка
+tests/visual-qa.mjs     Визуальные проверки и снимки реальных игровых состояний
 .github/workflows/pages.yml  Сборка и публикация GitHub Pages
 ```
 
 ## Публикация на GitHub Pages
 
-В репозитории уже есть workflow `.github/workflows/pages.yml`. В Vite используется относительная база `./`, поэтому сборка подходит и для адреса вида `https://USER.github.io/REPOSITORY/`.
+Проект принадлежит существующему репозиторию `https://github.com/fjilvvi/alexey-after-shift-dfs`; новый репозиторий или новый сайт создавать не нужно. Публичный адрес остаётся `https://fjilvvi.github.io/alexey-after-shift-dfs/`.
 
-1. Создайте репозиторий GitHub и загрузите в его корень содержимое этого проекта, включая `package-lock.json` и `.github/workflows/pages.yml`. Ветка для автоматической публикации — `main`.
-2. В репозитории откройте **Settings → Pages → Build and deployment → Source** и выберите **GitHub Actions**. Для бесплатного GitHub Pages обычно нужен публичный репозиторий; доступность Pages для приватного зависит от вашего тарифа.
-3. После push в `main` workflow **Publish game to GitHub Pages** установит зависимости, соберёт игру и опубликует `dist/`. Его можно запустить вручную через **Actions → Publish game to GitHub Pages → Run workflow**.
-4. Дождитесь успешного задания `deploy`. Ссылка будет в **Settings → Pages** и в окружении **github-pages**. Откройте её на iPhone.
+В репозитории уже есть workflow `.github/workflows/pages.yml`. В Vite используется относительная база `./`, поэтому сборка подходит для адреса проекта на GitHub Pages.
 
-Пример загрузки в новый пустой репозиторий, если локальный Git ещё не настроен:
+1. Загрузите изменения в ветку `main` существующего репозитория, включая `package-lock.json` и `.github/workflows/pages.yml`.
+2. В **Settings → Pages → Build and deployment → Source** должен быть выбран **GitHub Actions**.
+3. После push в `main` workflow **Publish Alexey After Shift Game** установит зависимости через `npm ci`, соберёт игру и опубликует `dist/`. Его также можно запустить вручную через **Actions → Publish Alexey After Shift Game → Run workflow**.
+4. Дождитесь успешного задания `deploy` и только после проверки публичного адреса считайте новую версию опубликованной.
 
 ```bash
-git init -b main
 git add .
-git commit -m "Add Alexey after shift game"
-git remote add origin https://github.com/USER/REPOSITORY.git
-git push -u origin main
+git commit -m "Polish movement, dialogue and gym timing"
+git push origin main
 ```
 
-Замените `USER` и `REPOSITORY` своими значениями. Для push нужны права записи в выбранный репозиторий. Готовую папку `dist/` также можно опубликовать на любом статическом хостинге; серверные функции и секреты игре не нужны.
+Для push нужны права записи в существующий репозиторий. Серверные функции и секреты самой игре не нужны.
