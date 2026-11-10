@@ -1,0 +1,1 @@
+{"name":"alexey-after-shift","private":true,"version":"1.0.0","type":"module","scripts":{"dev":"vite --host 0.0.0.0","build":"tsc --noEmit && vite build","preview":"vite preview --host 0.0.0.0","test":"node tests/playthrough.mjs"},"dependencies":{"phaser":"^3.90.0"},"devDependencies":{"typescript":"^5.9.3","vite":"^7.2.2","sharp":"^0.34.5","@playwright/test":"^1.56.1"}}

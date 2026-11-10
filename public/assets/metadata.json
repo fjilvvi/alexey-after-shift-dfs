@@ -1,0 +1,78 @@
+{
+  "source": "Generated pixel art from supplied photographic and style references.",
+  "alphaPreparation": "Largest connected components at alpha >=150; output pixels use hard 0/255 alpha.",
+  "sprites": {
+    "hero-idle": {
+      "width": 328,
+      "height": 740,
+      "sourceLeft": 36,
+      "sourceTop": 75,
+      "baseline": 737,
+      "bodyTop": 35
+    },
+    "hero-upper": {
+      "left": 0,
+      "top": 0,
+      "width": 328,
+      "height": 445,
+      "anchorInFull": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "hero-leg-left": {
+      "left": 0,
+      "top": 445,
+      "width": 165,
+      "height": 295,
+      "anchorInFull": {
+        "x": 0,
+        "y": 445
+      }
+    },
+    "hero-leg-right": {
+      "left": 165,
+      "top": 445,
+      "width": 163,
+      "height": 295,
+      "anchorInFull": {
+        "x": 165,
+        "y": 445
+      }
+    },
+    "hero-down": {
+      "width": 494,
+      "height": 740,
+      "sourceLeft": 363,
+      "sourceTop": 75,
+      "baseline": 737,
+      "bodyTop": 36
+    },
+    "hero-up": {
+      "width": 489,
+      "height": 740,
+      "sourceLeft": 813,
+      "sourceTop": 75,
+      "baseline": 737,
+      "bodyTop": 39
+    },
+    "hero-win": {
+      "width": 459,
+      "height": 740,
+      "sourceLeft": 1305,
+      "sourceTop": 75,
+      "baseline": 737,
+      "bodyTop": 2
+    }
+  },
+  "backgrounds": {
+    "shop": {
+      "width": 1122,
+      "height": 701
+    },
+    "gym": {
+      "width": 1122,
+      "height": 701
+    }
+  }
+}
