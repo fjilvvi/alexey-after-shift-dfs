@@ -1,0 +1,54 @@
+name: Import and publish Alexey: After Shift
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  import-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Import complete original game project
+        env:
+          GAME_ARCHIVE_URL: https://d2ol7oe51mr4n9.cloudfront.net/user_38VvyOCqf7C1HmHE638V4pkuRY3/f8781c9f-aa96-4cee-870a-3288bcc73a65.zip
+        run: |
+          set -euo pipefail
+          curl --fail --show-error --location --retry 3 "$GAME_ARCHIVE_URL" -o /tmp/alexey.zip
+          mkdir -p /tmp/alexey-import
+          unzip -q /tmp/alexey.zip -d /tmp/alexey-import
+          test -s /tmp/alexey-import/alexey/dist/index.html
+          cp -a /tmp/alexey-import/alexey/. .
+          test -s dist/index.html
+          git add -A
+          if ! git diff --cached --quiet; then
+            git -c user.name='DFS Arcade' -c user.email='actions@users.noreply.github.com' commit -m 'Import complete Alexey After Shift browser game'
+            git push origin HEAD:main
+          fi
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload game files
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy live game
+        id: deployment
+        uses: actions/deploy-pages@v4
